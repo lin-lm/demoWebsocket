@@ -64,13 +64,13 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(@PathParam("clientIp")String clientIp, String message){
+    public void onMessage(@PathParam("clientIp")String clientIp, String message, Session session){
         System.out.println("收到客户端： " + clientIp +" 发来的消息："+message);
 //        群发消息
         for (String sessionid : webSocketMap.keySet()){
             WebSocketServer item = webSocketMap.get(sessionid);
             try {
-                if(!sessionid.equals(this.session.getId())) {
+                if(!sessionid.equals(session.getId())) {
                     item.sendMessageToOne(sessionid, "广播：收到客户端【 " + clientIp + "】发来的消息：" + message);
                 }
             } catch (IOException e) {
