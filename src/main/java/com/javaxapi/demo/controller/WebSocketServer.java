@@ -1,65 +1,74 @@
 package com.javaxapi.demo.controller;
 
-/**
- * @Author: Linlm
- * @Description:
- * @Date: Created in 2019/2/21 下午5:49
- */
-
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @ServerEndPoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端，
- * 注解的值将被用于监听用户连接的终端访问URL地址，客户端可以通过这个URL连接到websocket服务器端
+ * @Author: Linlm
+ * @Description: websocket服务器端
+ *  @ServerEndPoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端，
+ *  注解的值将被用于监听用户连接的终端访问URL地址，客户端可以通过这个URL连接到websocket服务器端
+ * @Date: Created in 2019/2/21 下午5:49
  */
 @ServerEndpoint("/websocket/{clientIp}")
 @Component
 @Data
-public class WebSockTest {
+public class WebSocketServer {
     private static int onlineCount=0;
-    private static CopyOnWriteArrayList<WebSockTest> webSocketSet=new CopyOnWriteArrayList<WebSockTest>();
+
+    //用来存放每个客户端对应的WebSocketServer对象
+    private static Map<String, WebSocketServer> webSocketMap = new HashMap<>();
 
     //某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
-    //用来存放每个客户端对应的WebSocketServer对象
-    private static ConcurrentHashMap<String,WebSockTest> webSocketMap = new ConcurrentHashMap<String, WebSockTest>();
-
     //客户端的ip地址
     private String clientIp;
 
+    /**
+     * springboot内置tomcat的话，需要配一下这个。。如果没有这个对象，无法连接到websocket
+     * 别问为什么。。很坑。。。
+     * @return
+     */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        //这个对象说一下，貌似只有服务器是tomcat的时候才需要配置,具体我没有研究
+        return new ServerEndpointExporter();
+    }
 
     @OnOpen
     public void onOpen(@PathParam("clientIp")String clientIp, Session session){
         this.session=session;
         this.clientIp=clientIp;
-        webSocketSet.add(this);//加入set中
-        webSocketMap.put(clientIp,this);  //将当前对象放入map中
+
+        System.out.println("sessionid为："+session.getId());
+        webSocketMap.put(session.getId(), this);
         addOnlineCount();
         System.out.println("有新连接"+clientIp+"加入！当前在线人数为"+getOnlineCount());
     }
 
     @OnClose
     public void onClose(){
-        webSocketSet.remove(this);
+        webSocketMap.remove(session.getId());
         subOnlineCount();
         System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     @OnMessage
-    public void onMessage(String message,Session session){
-        System.out.println("来自客户端的消息："+message);
+    public void onMessage(String message){
+        System.out.println("收到客户端的消息："+message);
 //        群发消息
-        for (WebSockTest item:webSocketSet){
+        for (String sessionid : webSocketMap.keySet()){
+            WebSocketServer item = webSocketMap.get(sessionid);
             try {
                 item.sendMessage(message);
             } catch (IOException e) {
@@ -75,42 +84,75 @@ public class WebSockTest {
         throwable.printStackTrace();
     }
 
-
     //   下面是自定义的一些方法
     /**
-     * @Author: Linlm
-     * @Description: 给当前用户发送消息
-     * @Date: 2019/2/22 上午11:20
-     */
-    public void sendMessage(String message) throws IOException {
-        this.session.getBasicRemote().sendText(message);
-    }
-
-    /**
-     * 给所有用户发消息
+     * 用于发送给客户端消息（群发）
      * @param message
      */
-    public static void sendMessageAll(final String message){
-        //使用entrySet而不是用keySet的原因是,entrySet体现了map的映射关系,遍历获取数据更快。
-        Set<Map.Entry<String, WebSocketServer>> entries = webSocketMap.entrySet();
-        for (Map.Entry<String, WebSocketServer> entry : entries) {
-            final WebSocketServer webSocketServer = entry.getValue();
-            //这里使用线程来控制消息的发送,这样效率更高。
-            new Thread(new Runnable() {
-                public void run() {
-                    webSocketServer.sendMessage(message);
-                }
-            }).start();
+
+    public void sendMessage(String message) throws IOException {
+        //遍历客户端
+        for (String sessionid : webSocketMap.keySet()) {
+            System.out.println("websocket广播消息：" + message);
+            System.out.println("当前sessionid为：" + sessionid);
+            WebSocketServer item = webSocketMap.get(sessionid);
+            try {
+                //服务器主动推送
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        try {
+                            item.session.getBasicRemote().sendText(message);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            } catch (Exception e) {
+               throw e;
+            }
         }
     }
 
+    /**
+     * 用于发送给指定客户端消息
+     *
+     * @param message
+     */
+    public void sendMessage(String sessionId, String message) throws IOException {
+        WebSocketServer webSocket = webSocketMap.get(sessionId);
+        if (webSocket == null) {
+            System.out.println("没有找到你指定ID的会话：" + sessionId);
+            return;
+        }
+
+        webSocket.session.getBasicRemote().sendText(message);
+    }
+
+    /**
+     * @Author: Linlm
+     * @Description: 获取当前的连接数
+     * @Date: 2019/2/22 上午11:25
+     */
     public static synchronized int getOnlineCount(){
         return onlineCount;
     }
+    
+    /**
+     * @Author: Linlm
+     * @Description: 有新的用户连接时,连接数自加1
+     * @Date: 2019/2/22 上午11:25
+     */
     public static synchronized void addOnlineCount(){
-        WebSockTest.onlineCount++;
+        WebSocketServer.onlineCount++;
     }
+    
+    /**
+     * @Author: Linlm
+     * @Description: 断开连接时,连接数自减1
+     * @Date: 2019/2/22 上午11:26
+     */
     public static synchronized void subOnlineCount(){
-        WebSockTest.onlineCount--;
+        WebSocketServer.onlineCount--;
     }
 }
