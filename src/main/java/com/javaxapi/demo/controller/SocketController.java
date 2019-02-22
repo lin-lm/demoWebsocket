@@ -33,7 +33,7 @@ public class SocketController {
             @RequestParam("message") String message
     ){
         try {
-            webSocketServer.sendMessage(message);
+            webSocketServer.sendMessageToAll(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class SocketController {
             @RequestParam("message") String message
     ) {
         try {
-            webSocketServer.sendMessage(sessionId,message);
+            webSocketServer.sendMessageToOne(sessionId,message);
         } catch (IOException e) {
             e.printStackTrace();
         }

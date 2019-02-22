@@ -64,13 +64,15 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(String message){
-        System.out.println("收到客户端的消息："+message);
+    public void onMessage(@PathParam("clientIp")String clientIp, String message){
+        System.out.println("收到客户端： " + clientIp +" 发来的消息："+message);
 //        群发消息
         for (String sessionid : webSocketMap.keySet()){
             WebSocketServer item = webSocketMap.get(sessionid);
             try {
-                item.sendMessage(message);
+                if(!sessionid.equals(this.session.getId())) {
+                    item.sendMessageToOne(sessionid, "广播：收到客户端【 " + clientIp + "】发来的消息：" + message);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
@@ -89,8 +91,7 @@ public class WebSocketServer {
      * 用于发送给客户端消息（群发）
      * @param message
      */
-
-    public void sendMessage(String message) throws IOException {
+    public void sendMessageToAll(String message) throws IOException {
         //遍历客户端
         for (String sessionid : webSocketMap.keySet()) {
             System.out.println("websocket广播消息：" + message);
@@ -119,7 +120,7 @@ public class WebSocketServer {
      *
      * @param message
      */
-    public void sendMessage(String sessionId, String message) throws IOException {
+    public void sendMessageToOne(String sessionId, String message) throws IOException {
         WebSocketServer webSocket = webSocketMap.get(sessionId);
         if (webSocket == null) {
             System.out.println("没有找到你指定ID的会话：" + sessionId);
