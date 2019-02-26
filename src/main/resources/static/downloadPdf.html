@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<meta charset="UTF-8">
+<div class="printBox" style="width:650px;padding:10px;">
+    <!--第一页-->
+    <div>
+        <p>标题xxxxx</p>
+        <div class="imgWrap">
+            <img src="/images/20190226140319.png" style="display:inline-block;max-width: 300px;max-height:400px;">
+            <img src="/images/20190226140319.png" style="display:inline-block;max-width: 300px;max-height:400px;">
+        </div>
+        <p>
+            <span>日期: 2018-07-11</span>
+            <span>备注：xxxxx</span>
+        </p>
+    </div>
+    <!--第2页-->
+    <div>
+        <p>标题xxxxx</p>
+        <div class="imgWrap">
+            <img src="/images/20190226140319.png" style="display:inline-block;max-width: 300px;max-height:400px;">
+            <img src="/images/20190226140319.png" style="display:inline-block;max-width: 300px;max-height:400px;">
+        </div>
+        <p>
+            <span>日期: 2018-07-11</span>
+            <span>备注：xxxxx</span>
+        </p>
+    </div>
+</div>
+
+
+<a class="active">下载pdf</a>
+
+<script src="./js/jquery/jquery-3.2.1.js"></script>
+<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+
+<script>
+    $('.printBox').css("background","#fff");
+    $(".active").on("click",function(){
+        var filename = '物流单.pdf';
+        var pdf = new jsPDF('p', 'mm','a4');
+        var options = {
+            pagesplit: true
+        };
+
+        pdf.addHTML($(".printBox"),options, function(){
+            pdf.output("save", filename);
+        })
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>网页HTML存本地</title>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <script src="./js/FileSaver.js"></script>
+    <script src="./js/jqueryword.js"></script>
+    <style>
+        tr {
+            mso-height-source: auto;
+            mso-ruby-visibility: none;
+        }
+
+        col {
+            mso-width-source: auto;
+            mso-ruby-visibility: none;
+        }
+
+        br {
+            mso-data-placement: same-cell;
+        }
+
+        ruby {
+            ruby-align: left;
+        }
+
+        .style0 {
+            mso-number-format: General;
+            text-align: general;
+            vertical-align: bottom;
+            white-space: normal;
+            mso-rotate: 0;
+            mso-background-source: auto;
+            mso-pattern: auto;
+            color: windowtext;
+            font-size: 12.0pt;
+            font-weight: 400;
+            font-style: normal;
+            text-decoration: none;
+            font-family: 宋体;
+            mso-generic-font-family: auto;
+            mso-font-charset: 134;
+            border: none;
+            mso-protection: locked visible;
+            mso-style-name: 常规;
+            mso-style-id: 0;
+        }
+
+        td {
+            mso-style-parent: style0;
+            padding-top: 1px;
+            padding-right: 1px;
+            padding-left: 1px;
+            mso-ignore: padding;
+            color: windowtext;
+            font-size: 12.0pt;
+            font-weight: 400;
+            font-style: normal;
+            text-decoration: none;
+            font-family: 宋体;
+            mso-generic-font-family: auto;
+            mso-font-charset: 134;
+            mso-number-format: General;
+            text-align: general;
+            vertical-align: bottom;
+            border: none;
+            mso-background-source: auto;
+            mso-pattern: auto;
+            mso-protection: locked visible;
+            white-space: normal;
+            mso-rotate: 0;
+            border: 1px solid black;
+        }
+
+        .xl65 {
+            mso-style-parent: style0;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+        }
+
+        .xl66 {
+            mso-style-parent: style0;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .xl67 {
+            mso-style-parent: style0;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+            white-space: normal;
+        }
+
+        .xl68 {
+            mso-style-parent: style0;
+            text-align: left;
+            vertical-align: top;
+            white-space: normal;
+        }
+
+        .xl69 {
+            mso-style-parent: style0;
+            text-align: left;
+            vertical-align: top;
+            border-top: .5pt solid windowtext;
+            border-right: none;
+            border-bottom: .5pt solid windowtext;
+            white-space: normal;
+        }
+
+        .xl70 {
+            mso-style-parent: style0;
+            text-align: left;
+            vertical-align: top;
+            border-top: .5pt solid windowtext;
+            border-right: .5pt solid windowtext;
+            border-bottom: .5pt solid windowtext;
+            white-space: normal;
+        }
+
+        .xl71 {
+            mso-style-parent: style0;
+            font-size: 22.0pt;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+            white-space: normal;
+        }
+
+        .xl72 {
+            mso-style-parent: style0;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid black;
+            white-space: normal;
+        }
+
+        .xl73 {
+            mso-style-parent: style0;
+            font-size: 18.0pt;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+            white-space: normal;
+        }
+
+
+        table {
+            mso-displayed-decimal-separator: "\.";
+            mso-displayed-thousand-separator: "\,";
+        }
+
+        @page {
+            margin: 1.0in .75in 1.0in .75in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+        }
+
+        ruby {
+            ruby-align: left;
+        }
+
+        rt {
+            color: windowtext;
+            font-size: 9.0pt;
+            font-weight: 400;
+            font-style: normal;
+            text-decoration: none;
+            font-family: 宋体;
+            mso-generic-font-family: auto;
+            mso-font-charset: 134;
+            mso-char-type: none;
+            display: none;
+        }
+        p {
+            font-size: 12.0pt;
+            font-weight: 400;
+            font-style: normal;
+            text-decoration: none;
+            font-family: 宋体;
+        }
+
+        .page_content{
+            line-height:28pt;
+            font-family:FZXBSJW-GB1-0 ,方正小标宋简体;
+            font-size: 13pt;
+            color:#000000;
+            text-indent:2em;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="button" value="导出" id="bth">
+
+    <div style="margin:0 auto;width:500px" id="content">
+        <p  height=67 class="xl71 text-center" width=640>中介机构中选通知书</p>
+        <p style="line-height:28pt;font-family:FZXBSJW-GB1-0,方正小标宋简体;font-size: 13pt;color:#000000"><span id='CONAME'></span>:</p>
+        <p class='page_content' >根据中介机构公开选取公告，我单位于
+            <span id='confirmDate'></span>在中介服务网进行中介机构选取，采用<span id="bid_type"></span>确定中介机构。</p>
+        <p class='page_content'>现确定你公司为<span id='title'></span>项目招标代理活动的中介机构中选单位。请你单位持本中选确认书与业主单位联系。</p>
+        <p id="button_tr" style="text-align:center">
+            <span style="color:red;">如果在IE或者360浏览器（所有IE内核浏览器）中打印，请使用打印预览功能查看打印效果，如需打印为一张，请在打印预览中进行缩放设置。</span>
+        </p>
+    </div>
+
+    <!--不能输出图片，会报错-->
+    <script>
+        $(function(){
+            $("#bth").click(function() {
+                $("#content").wordExport("中选通知书");
+
+            });
+        })
+    </script>
+</body>
+</html>
+
