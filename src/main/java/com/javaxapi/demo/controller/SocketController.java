@@ -1,10 +1,5 @@
 package com.javaxapi.demo.controller;
 
-/**
- * @Author: Linlm
- * @Description:
- * @Date: Created in 2019/2/22 下午1:35
- */
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,10 +9,9 @@ import java.io.IOException;
 
 /**
  * @Author: Linlm
- * @Description: 消息发送类。服务端主动向客户端发送消息
+ * @Description: websocket消息发送类。服务端主动向客户端发送消息
  * @Date: Created in 2019/2/21 下午5:49
  */
-
 @RestController
 @RequestMapping("/websocketMessage")
 public class SocketController {
