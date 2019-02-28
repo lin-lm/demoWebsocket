@@ -40,6 +40,7 @@ The following guides illustrates how to use certain features concretely:
     
 # 3.springboot项目整合vue前端项目
 * 参考：https://segmentfault.com/a/1190000014211773
+    搭建vue项目：https://www.cnblogs.com/hackyo/p/7988399.html
 
 * 打包vue项目，生成dist目录
 
