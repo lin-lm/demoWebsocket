@@ -11,6 +11,7 @@ The following guides illustrates how to use certain features concretely:
 ## 目录
 # 1.websocket前后端消息推送
 # 2.页面导出为doc、pdf、html
+# 3.springboot项目整合vue前端项目
 
 ## 说明
 # 1.websocket前后端消息推送
@@ -36,3 +37,10 @@ The following guides illustrates how to use certain features concretely:
     downloadDoc.html。需引入docDownload中的js文件
     downloadHtml.html。需引入jquery
     downloadPdf.html。需引入pdfDownload中的js文件
+    
+# 3.springboot项目整合vue前端项目
+* 参考：https://segmentfault.com/a/1190000014211773
+
+* 打包vue项目，生成dist目录
+
+* 将dist目录下的static目录和index.html文件复制到springboot项目的resources/static/目录下。本项目中index_vue.html为原来vue项目的index.html文件
