@@ -16,10 +16,11 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <quartz.version>2.2.1</quartz.version>
     </properties>
 
     <dependencies>
-        <!--热部署devtools-->
+        <!--热部署devtools start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -31,8 +32,9 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--热部署devtools end-->
 
-        <!--websocket连接需要使用到的包-->
+        <!--websocket连接需要使用到的包 start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
@@ -43,6 +45,25 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--websocket连接需要使用到的包 end-->
+
+        <!--定时任务需要的包 start-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
+        <!--定时任务需要的包 end-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
