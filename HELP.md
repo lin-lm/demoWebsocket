@@ -57,3 +57,11 @@ The following guides illustrates how to use certain features concretely:
     com.javaxapi.demo.config.quartz.QuartzConfig    //定时任务配置类
     com.javaxapi.demo.schedule.job.ScheduledTaskJob  //定时任务：业务逻辑
     com.javaxapi.demo.config.quartz.ScheduleRefreshService  //动态重置定时任务配置
+
+# 5.springboot2 http转https
+https://blog.csdn.net/zsj777/article/details/81431017
+* 生成证书，将证书放在resources目录下
+    keytool -genkey -alias tomcat -keyalg RSA -validity 20000 -keystore keystore.p12
+* 在application.properties中配置ssl相关信息
+* 添加配置类
+    com.javaxapi.demo.config.HttpsRequestConfig
