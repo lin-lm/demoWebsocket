@@ -65,3 +65,9 @@ https://blog.csdn.net/zsj777/article/details/81431017
 * 在application.properties中配置ssl相关信息
 * 添加配置类
     com.javaxapi.demo.config.HttpsRequestConfig
+
+# 6.springboot2项目整合logback日志
+https://www.cnblogs.com/zhangjianbing/p/8992897.html
+* springboot已默认引入所有需要的日志相关的包
+  添加 log/logback-spring.xml。 文件以spring结尾，配置时可使用 springProfile 标签
+  在 application.properties 文件中引入 log/logback-spring.xml，并配置日志保存路径
